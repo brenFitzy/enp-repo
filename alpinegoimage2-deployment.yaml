@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: alpinego2
+  name: alpinego2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: alpinego2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: alpinego2
+    spec:
+      hostNetwork: true
+      imagePullSecrets:
+      - name: brendock
+      containers:
+      - name: alpinego2
+        image: brenfitzy/01:alpinegoimage
+        imagePullPolicy: Always
+        # args:
+        # - /bin/sh
+        # - -c
+        # - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+        livenessProbe:
+         exec:
+           command:
+           - touch
+           - /tmp/healthy
+         initialDelaySeconds: 5
+         periodSeconds: 5
+        resources:
+          limits:
+            cpu: 2
+            memory: 1Gi
+          requests:
+            cpu: 250m
+        securityContext:
+         privileged: true
+         #command: ["/bin/sh", "-ec", "go run /root/go/src/github.com/paypal/gatt/examples/discoverer.go"]
+#        command: ["/bin/sh", "-ce", "su ./root/go/src/github.com/paypal/gatt/examples/discoverer.go"]
+        command: ["/bin/sh", "-ec", "sleep infinity"]
